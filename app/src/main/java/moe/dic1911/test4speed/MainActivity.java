@@ -1,5 +1,6 @@
 package moe.dic1911.test4speed;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +19,13 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_run, btn_svc;
     private NetworkService svc;
+    private boolean svcStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        svcStarted = false;
         btn_run = findViewById(R.id.btn_run);
         btn_svc = findViewById(R.id.btn_svc);
         btn_run.setOnClickListener(new View.OnClickListener() {
@@ -33,13 +36,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // not working rn
-        btn_svc.setEnabled(false);
+        btn_svc.setEnabled(!svcStarted);
         btn_svc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (svc == null) {
-                    getSystemService(Context.ACTIVITY_SERVICE);
+                if (!svcStarted) {
                     getApplicationContext().startService(new Intent(getApplicationContext(), NetworkService.class));
+                    svcStarted = true;
+                    btn_svc.setEnabled(!svcStarted);
                 }
             }
         });
