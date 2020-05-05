@@ -4,4 +4,8 @@
     <string name="start">執行</string>
     <string name="start_svc">啟動服務</string>
     <string name="stop_svc">停止服務</string>
+    <string name="running_svc">服務已啟用</string>
+    <string name="stopped_svc">服務已停用</string>
+    <string name="running">Running...</string>
+    <string name="done">執行完畢</string>
 </resources>

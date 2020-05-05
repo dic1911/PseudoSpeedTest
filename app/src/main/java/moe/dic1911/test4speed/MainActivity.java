@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_run, btn_svc;
     private NetworkService svc;
+    private Context mContext;
     private static boolean svcStarted;
     private static Intent svcIntent;
 
@@ -37,23 +39,26 @@ public class MainActivity extends AppCompatActivity {
         svcStarted = isServiceRunning(NetworkService.class);
         btn_run = findViewById(R.id.btn_run);
         btn_svc = findViewById(R.id.btn_svc);
+        mContext = getApplicationContext();
         btn_run.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(mContext, R.string.running, Toast.LENGTH_SHORT).show();
                 NetworkUtils.pokeSpeedTest();
+                Toast.makeText(mContext, R.string.done, Toast.LENGTH_SHORT).show();
             }
         });
 
-        if (svcIntent == null) svcIntent = new Intent(getApplicationContext(), NetworkService.class);
-        //btn_svc.setEnabled(!svcStarted);
+        if (svcIntent == null) svcIntent = new Intent(mContext, NetworkService.class);
         btn_svc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!svcStarted) {
                     getApplicationContext().startService(svcIntent);
-                    //btn_svc.setEnabled(!svcStarted);
+                    Toast.makeText(mContext, R.string.running_svc, Toast.LENGTH_SHORT).show();
                 } else {
                     getApplicationContext().stopService(svcIntent);
+                    Toast.makeText(mContext, R.string.stopped_svc, Toast.LENGTH_SHORT).show();
                 }
                 svcStarted = !svcStarted;
                 btn_svc.setText(svcStarted ? getString(R.string.stop_svc) : getString(R.string.start_svc));

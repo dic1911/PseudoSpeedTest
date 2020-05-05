@@ -1,14 +1,14 @@
 package moe.dic1911.test4speed;
 
+import android.content.Context;
 import android.util.Log;
-
-import java.io.IOException;
+import android.widget.Toast;
 
 import okhttp3.Request;
 
 public class NetworkUtils {
 
-    public static final String[] urls = {
+    private static final String[] urls = {
             "https://speedtest.net",
             "https://www.speedtest.net/api/js/servers?engine=js&limit=10&https_functional=true",
             "https://c.speedtest.net/speedtest-servers-static.php",
