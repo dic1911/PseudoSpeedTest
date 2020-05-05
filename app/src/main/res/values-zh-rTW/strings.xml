@@ -3,4 +3,5 @@
     <string name="app_desc">這只是一個簡單的App可以戳一下SpeedTest讓電信業者暫時解除限速，啟用服務之後要停用的話請使用Android的\"強制停止\"</string>
     <string name="start">執行</string>
     <string name="start_svc">啟動服務</string>
+    <string name="stop_svc">停止服務</string>
 </resources>

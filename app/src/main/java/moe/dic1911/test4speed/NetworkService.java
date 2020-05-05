@@ -18,7 +18,7 @@ import okhttp3.Request;
 
 public class NetworkService extends Service {
 
-    private static final int interval = 2 * 1000; // 2 min
+    private static final int interval = 90 * 1000; // 1.5 min
     private static final String CHANNEL_ID = "default";
     private static android.app.Notification noti;
 
