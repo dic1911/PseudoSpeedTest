@@ -3,6 +3,7 @@ package moe.dic1911.test4speed;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -49,12 +50,16 @@ public class NetworkService extends Service {
         super.onStartCommand(intent, flags, startId);
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
 
+
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
         noti = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setOngoing(true)
                 .setContentTitle(getString(R.string.running_svc))
                 .setContentText(getString(R.string.running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_foreground))
+                .setContentIntent(pi)
                 .setDefaults(Notification.DEFAULT_SOUND).setVibrate(new long[]{0L})
                 .setVibrate(null)
                 .setChannelId(CHANNEL_ID)
