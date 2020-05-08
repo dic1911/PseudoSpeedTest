@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -37,14 +38,9 @@ public class NetworkService extends Service {
                     "Default Notification Ch.",
                     NotificationManager.IMPORTANCE_MIN);
 
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).deleteNotificationChannel(CHANNEL_ID);
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-
-            /*android.app.Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("030")
-                    .setContentText("TEST").build();*/
-
-            //startForeground(1, notification);
+            if (((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).getNotificationChannels().size() == 0) {
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+            }
         }
     }
 
@@ -54,12 +50,22 @@ public class NetworkService extends Service {
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
 
         noti = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setOngoing(true)
+                .setContentTitle(getString(R.string.running_svc))
+                .setContentText(getString(R.string.running))
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_foreground))
                 .setDefaults(Notification.DEFAULT_SOUND).setVibrate(new long[]{0L})
                 .setVibrate(null)
                 .setChannelId(CHANNEL_ID)
                 .build();
 
-        startForeground(1, noti);
+        //Start service, but different code for different android version
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, noti);
+        } else {
+            startService(new Intent(this, NetworkService.class));
+        }
 
         AsyncTask.execute(new Runnable() {
             @Override
