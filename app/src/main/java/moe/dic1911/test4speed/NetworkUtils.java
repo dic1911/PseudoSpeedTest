@@ -1,12 +1,15 @@
 package moe.dic1911.test4speed;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import okhttp3.Request;
+import okhttp3.Response;
 
 public class NetworkUtils {
+    public static Context mContext = null;
 
     private static final String[] urls = {
             "https://speedtest.net",
@@ -26,7 +29,12 @@ public class NetworkUtils {
             nt.start();
             try {
                 nt.join();
-                if (nt.getResponse().isSuccessful()) {
+                Response resp = nt.getResponse();
+                if (resp == null) {
+                    Toast.makeText(mContext, mContext.getString(R.string.failed), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (resp.isSuccessful()) {
                     Log.d("HTTP_GET", String.valueOf(nt.getResponse().code()));
                 }
             } catch (InterruptedException e) {

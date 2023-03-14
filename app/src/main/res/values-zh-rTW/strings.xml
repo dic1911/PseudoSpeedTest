@@ -8,4 +8,5 @@
     <string name="stopped_svc">服務已停用</string>
     <string name="running">執行中...</string>
     <string name="done">執行完畢</string>
+    <string name="failed">發生錯誤, 請收集錯誤紀錄並上傳至GitHub issues.</string>
 </resources>

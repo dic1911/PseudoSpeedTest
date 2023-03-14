@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         btn_run = findViewById(R.id.btn_run);
         btn_svc = findViewById(R.id.btn_svc);
         mContext = getApplicationContext();
+        NetworkUtils.mContext = mContext;
         btn_run.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

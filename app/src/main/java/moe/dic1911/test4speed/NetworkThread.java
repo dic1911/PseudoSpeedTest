@@ -3,6 +3,7 @@ package moe.dic1911.test4speed;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

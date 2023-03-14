@@ -8,4 +8,5 @@
     <string name="stopped_svc">Service stopped</string>
     <string name="running">Running...</string>
     <string name="done">Poked SpeedTest</string>
+    <string name="failed">Error occurred, please collect logs and open issue.</string>
 </resources>
