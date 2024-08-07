@@ -1,5 +1,7 @@
 package moe.dic1911.test4speed;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,8 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import okhttp3.Request;
 
 public class NetworkService extends Service {
 
@@ -51,7 +51,7 @@ public class NetworkService extends Service {
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
 
 
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         noti = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setOngoing(true)
@@ -66,7 +66,10 @@ public class NetworkService extends Service {
                 .build();
 
         //Start service, but different code for different android version
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        Log.d("030-sdk", String.valueOf(Build.VERSION.SDK_INT));
+        if (Build.VERSION.SDK_INT >= 34) {
+            startForeground(1, noti, FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(1, noti);
         } else {
             startService(new Intent(this, NetworkService.class));

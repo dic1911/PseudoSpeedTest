@@ -1,15 +1,15 @@
 package moe.dic1911.test4speed;
 
-import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
+import java.util.concurrent.CountDownLatch;
+
 import okhttp3.Request;
-import okhttp3.Response;
 
 public class NetworkUtils {
-    public static Context mContext = null;
+    public static MainActivity mContext = null;
+    public static Boolean hasError = false;
+    public static CountDownLatch guard = null;
 
     private static final String[] urls = {
             "https://speedtest.net",
@@ -20,26 +20,30 @@ public class NetworkUtils {
 
     public static void pokeSpeedTest() {
         Request r;
+        hasError = false;
+        guard = new CountDownLatch(urls.length);
+
         for (String s : urls) {
-            Log.d("HTTP_GET", s);
             r = new Request.Builder().header("Accept-Encoding", "gzip")
                     .header("Cache-Control", "no-cache")
                     .url(s).build();
-            NetworkThread nt = new NetworkThread(s, r);
-            nt.start();
+            new NetworkThread(s, r).start();
+        }
+
+        new Thread(() -> {
             try {
-                nt.join();
-                Response resp = nt.getResponse();
-                if (resp == null) {
-                    Toast.makeText(mContext, mContext.getString(R.string.failed), Toast.LENGTH_LONG).show();
-                    return;
+                while (guard.getCount() > 0) {
+                    guard.await();
                 }
-                if (resp.isSuccessful()) {
-                    Log.d("HTTP_GET", String.valueOf(nt.getResponse().code()));
+
+                if (hasError) {
+                    mContext.runOnUiThread(() -> {
+                        Toast.makeText(mContext, mContext.getString(R.string.failed), Toast.LENGTH_LONG).show();
+                    });
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-        }
+        }).start();
     }
 }

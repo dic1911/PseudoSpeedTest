@@ -3,7 +3,7 @@ package moe.dic1911.test4speed;
 import android.util.Log;
 
 import java.io.IOException;
-import java.net.ConnectException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,7 +20,12 @@ public class NetworkThread extends Thread implements Runnable {
         this.url = url;
         this.req = req;
         this.res = null;
-        this.hc = new OkHttpClient();
+        this.hc = new OkHttpClient.Builder()
+                .followRedirects(true)
+                .retryOnConnectionFailure(true)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .build();
     }
 
     void setRequest (Request req) {
@@ -34,14 +39,21 @@ public class NetworkThread extends Thread implements Runnable {
     void exec() {
         try {
             this.res = hc.newCall(req).execute();
-            Log.d("HTTP_GET", String.valueOf(this.res.code()));
-            if (!res.isSuccessful()) {
-                Log.d("HTTP_GET", "failed to get response");
+            Log.d("HTTP_GET", String.format("%s: %s", req.url(), res.code()));
+            if (res == null || !res.isSuccessful()) {
+                NetworkUtils.hasError = true;
+                Log.d("HTTP_GET", String.format("failed to get response: %s", req.url()));
             }
         } catch (IOException e) {
-            Log.d("HTTP_GET", "failed to get response");
+            NetworkUtils.hasError = true;
+            Log.d("HTTP_GET", String.format("failed to get response: %s", req.url()));
             e.printStackTrace();
+        } finally {
+            if (res != null) {
+                res.close();
+            }
         }
+        NetworkUtils.guard.countDown();
     }
 
     @Override
