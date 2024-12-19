@@ -16,6 +16,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/txt_interval"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="90"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@id/txt_desc"
+        app:layout_constraintEnd_toEndOf="@id/txt_desc"
+        app:layout_constraintTop_toBottomOf="@id/txt_desc" />
+
     <Button
         android:id="@+id/btn_run"
         android:layout_width="wrap_content"

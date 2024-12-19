@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 public class NetworkService extends Service {
 
-    private static final int interval = 90 * 1000; // 1.5 min
+    private static int interval = 90 * 1000; // 1.5 min
     private static final String CHANNEL_ID = "default";
     private static android.app.Notification noti;
 
@@ -48,8 +48,9 @@ public class NetworkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
-
+        interval = MainActivity.interval * 1000;
+        Toast.makeText(this, String.format("Service Started, interval: %ds", MainActivity.interval),
+                Toast.LENGTH_SHORT).show();
 
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -66,7 +67,6 @@ public class NetworkService extends Service {
                 .build();
 
         //Start service, but different code for different android version
-        Log.d("030-sdk", String.valueOf(Build.VERSION.SDK_INT));
         if (Build.VERSION.SDK_INT >= 34) {
             startForeground(1, noti, FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

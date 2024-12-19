@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private static boolean svcStarted;
     private static Intent svcIntent;
+    public static int interval = 90;
 
     @Override
     protected void onResume() {
@@ -42,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (svcIntent == null) svcIntent = new Intent(mContext, NetworkService.class);
+        if (svcIntent == null) svcIntent = new Intent(this, NetworkService.class);
         btn_svc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                interval = Integer.parseInt(((TextView) findViewById(R.id.txt_interval)).getText().toString());
                 if (!svcStarted) {
                     getApplicationContext().startService(svcIntent);
-                    Toast.makeText(mContext, R.string.running_svc, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(mContext, R.string.running_svc, Toast.LENGTH_SHORT).show();
                 } else {
                     getApplicationContext().stopService(svcIntent);
                     Toast.makeText(mContext, R.string.stopped_svc, Toast.LENGTH_SHORT).show();
