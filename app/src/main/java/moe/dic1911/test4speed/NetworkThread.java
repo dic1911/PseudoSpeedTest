@@ -2,14 +2,19 @@ package moe.dic1911.test4speed;
 
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetworkThread extends Thread implements Runnable {
+
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
 
     private OkHttpClient hc;
     private String url;
@@ -25,6 +30,7 @@ public class NetworkThread extends Thread implements Runnable {
                 .retryOnConnectionFailure(true)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
+                .addNetworkInterceptor(new UserAgentInterceptor(USER_AGENT))
                 .build();
     }
 
@@ -59,5 +65,24 @@ public class NetworkThread extends Thread implements Runnable {
     @Override
     public void run() {
         exec();
+    }
+
+    public static class UserAgentInterceptor implements Interceptor {
+
+        private final String userAgent;
+
+        public UserAgentInterceptor(String userAgent) {
+            this.userAgent = userAgent;
+        }
+
+        @NotNull
+        @Override
+        public Response intercept(@NotNull Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            Request requestWithUserAgent = originalRequest.newBuilder()
+                    .header("User-Agent", userAgent)
+                    .build();
+            return chain.proceed(requestWithUserAgent);
+        }
     }
 }

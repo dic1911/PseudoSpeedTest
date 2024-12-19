@@ -36,7 +36,7 @@ public class NetworkUtils {
                     guard.await();
                 }
 
-                if (hasError) {
+                if (hasError && mContext != null) {
                     mContext.runOnUiThread(() -> {
                         Toast.makeText(mContext, mContext.getString(R.string.failed), Toast.LENGTH_LONG).show();
                     });

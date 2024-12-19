@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "moe.dic1911.test4speed"
-        minSdkVersion 19
+        minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 34
         versionCode 1
